@@ -27,12 +27,13 @@
             <tbody>
               <% for (i=0; i<temporaryCards.length; i++) { %>
               <tr>
-                <th scope="row"><%= i %></th>
+                <th scope="row"><%= i +1 %></th>
                 <td><%= temporaryCards[i].departure %> / <%= temporaryCards[i].arrival %></td>
                 <td><%= temporaryCards[i].date.toLocaleString() %></td>
                 <td><%= %></td>
                 <td><%= temporaryCards[i].price %></td>
               </tr>
+              <% } %>
             </tbody>
           </table>
 

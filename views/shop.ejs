@@ -14,30 +14,14 @@
         <h2 class="list-group col-8 mt-5 mx-auto text-white">Tickets available on 02/08</h2>
 
         <ul class="list-group col-8 mt-5 mx-auto">
+          <% for (var i=0; i<journeys.length; i++) { %>
           <li class="list-group-item mb-2 d-flex justify-content-around align-items-center">
-            <h4>Lille / Paris</h4>
-            <span>train departure at: 16pm</span>
-            <span>94 €</span>
-            <a href='/cart?_id=60128d2f5dda586f12da5622'><button type="button" class="btn btn-danger">OK</button></a>
+            <h4><%= journeys[i].departure %> / <%= journeys[i].arrival %></h4>
+            <span>train departure at: <%= journeys[i].departureTime %></span>
+            <span><%= journeys[i].price %> €</span>
+            <a href='/cart?_id=<%= journeys[i]._id %>'><button type="button" class="btn btn-danger">OK</button></a>
           </li>
-          <li class="list-group-item mb-2 d-flex justify-content-around align-items-center">
-            <h4>Lille / Paris</h4>
-            <span>train departure at: 16pm</span>
-            <span>94 €</span>
-            <button type="button" class="btn btn-danger">OK</button>
-          </li>
-          <li class="list-group-item mb-2 d-flex justify-content-around align-items-center">
-            <h4>Lille / Paris</h4>
-            <span>train departure at: 16pm</span>
-            <span>94 €</span>
-            <button type="button" class="btn btn-danger">OK</button>
-          </li>
-          <li class="list-group-item mb-2 d-flex justify-content-around align-items-center">
-            <h4>Lille / Paris</h4>
-            <span>train departure at: 16pm</span>
-            <span>94 €</span>
-            <button type="button" class="btn btn-danger">OK</button>
-          </li>
+          <% } %>
         </ul>
 
       </div>
