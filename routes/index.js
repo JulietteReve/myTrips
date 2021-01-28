@@ -22,93 +22,82 @@ var date = [
   "2018-11-24",
 ];
 
-
 var totalPrice = 0;
 
-/* GET inscription page. */
+// GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
   res.render("sign", { title: "Ticketac" });
 });
 
-router.get("/cart", function (req, res, next) {
-  res.render("cart", {user: req.session.user, temporaryCards: req.session.temporaryCards, totalPrice });
-});
-
-
-/* POST signup page. */
+// POST - Sign-Up
 router.post("/signup", async function (req, res, next) {
   try {
     var searchUser = await userModel.findOne({
-    email: req.body.email
-  })
-  
-  if(!searchUser){
-  var newUser = new userModel({
-    lastname: req.body.lastname,
-    firstname: req.body.firstname,
-    email: req.body.email,
-    password: req.body.password,
-  })
+      email: req.body.email,
+    });
 
-  var newUserSave = await newUser.save();
+    if (!searchUser) {
+      var newUser = new userModel({
+        lastname: req.body.lastname,
+        firstname: req.body.firstname,
+        email: req.body.email,
+        password: req.body.password,
+      });
 
-  req.session.user = {
-    lastname: newUser.lastname,
-    firstname: newUser.firstname,
-    email: newUser.email,
-    password: newUser.password,
-    id : newUser._id
-  };
-  req.session.temporaryCards = [];
-  // console.log(req.session.user)
+      var newUserSave = await newUser.save();
 
-  // console.log ('test', newUserSave)
-
-  res.render("home", {user : req.session.user})
-
-} else {
-  res.redirect('/')
-}}
-catch(err){res.send(err.messages)}
+      req.session.user = {
+        lastname: newUser.lastname,
+        firstname: newUser.firstname,
+        email: newUser.email,
+        password: newUser.password,
+        id: newUser._id,
+      };
+      req.session.temporaryCards = [];
+      res.render("home", { user: req.session.user });
+    } else {
+      res.redirect("/");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
 });
 
-/* POST signin page. */
+// POST Sign-In
 router.post("/signin", async function (req, res, next) {
-  
-  try {var searchUser = await userModel.findOne({
-    email: req.body.email, 
-    password: req.body.password
-  })
-  
-  if(searchUser!=null){
+  try {
+    var searchUser = await userModel.findOne({
+      email: req.body.email,
+      password: req.body.password,
+    });
 
-    req.session.user = {
-      lastname: searchUser.lastname,
-      firstname: searchUser.firstname,
-      email: searchUser.email,
-      password: searchUser.password,
-      id : searchUser._id
-    };
+    if (searchUser != null) {
+      req.session.user = {
+        lastname: searchUser.lastname,
+        firstname: searchUser.firstname,
+        email: searchUser.email,
+        password: searchUser.password,
+        id: searchUser._id,
+      };
 
-    req.session.temporaryCards = [];
-    
-  res.render('home', {user : req.session.user})
+      req.session.temporaryCards = [];
 
-} else {
-
-  res.redirect("sign")
-}}
-catch(err){res.send(err.messages)}
-
+      res.render("home", { user: req.session.user });
+    } else {
+      res.redirect("/");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
 });
 
-/*GET Log out */
+// GET - Log Out
 router.get("/logout", (req, res, next) => {
   req.session.user = null;
   res.redirect("/");
 });
 
-/* GET home page. */
+// GET Home Page - After Sign-In/Sign-Up Phase
 router.get("/home", function (req, res, next) {
   if (req.session.user) {
     res.render("home", { title: "Ticketac", user: req.session.user });
@@ -117,7 +106,7 @@ router.get("/home", function (req, res, next) {
   }
 });
 
-/*POST to search journeys from Homepage */
+// POST to Search Journeys in Homepage
 router.post("/search-journey", async (req, res, next) => {
   try {
     let { departure, arrival, date } = req.body;
@@ -131,12 +120,8 @@ router.post("/search-journey", async (req, res, next) => {
         date,
       });
       if (journeys.length) {
-        //console.log(`Recherche: ${departure}-${arrival} on ${date}`);
         res.render("shop", { title: "Ticketac", journeys });
       } else {
-        // console.log(
-        //   `no train available for ${departure}-${arrival} on ${date}`
-        // );
         res.redirect("/error");
       }
     } else {
@@ -147,57 +132,49 @@ router.post("/search-journey", async (req, res, next) => {
   }
 });
 
+// GET - Error page when no train available on a specific date
+router.get("/error", (req, res, next) => {
+  res.render("errormsg", { title: "Ticketac" });
+});
+
+// GET - Cart Page
+router.get("/cart", function (req, res, next) {
+  res.render("cart", {
+    user: req.session.user,
+    temporaryCards: req.session.temporaryCards,
+    totalPrice,
+  });
+});
+
+// GET - Add Ticket To Cart
 router.get("/add-cart", async function (req, res, next) {
   var cart = await journeyModel.findById(req.query._id);
   req.session.temporaryCards.push(cart);
-  
 
   for (i = 0; i < req.session.temporaryCards.length; i++) {
     totalPrice += req.session.temporaryCards[i].price;
   }
 
-  res.render("cart", { temporaryCards: req.session.temporaryCards, totalPrice });
+  res.render("cart", {
+    temporaryCards: req.session.temporaryCards,
+    totalPrice,
+  });
 });
 
+// GET - Confirm Ticket "Purchase" - Add to user's db
 router.get("/confirm-cart", async function (req, res, next) {
-  
-  // console.log('hello', req.session.user._id)
-   
-  // var user = await userModel.findById(req.session.user._id);
-  
-  // console.log('coucou', user)
-
-  // for (i=0; i<req.session.temporaryCards[i].length; i++) {
-  //   user.journeys.push(req.session.temporaryCards[i]._id);
-  //   await user.save()
-  // }
-  
-
-  
-  
-    res.send();
-  // res.render("reservations", { temporaryCards: req.session.temporaryCards, totalPrice });
-});
-
-
-router.get("/error", (req, res, next) => {
-  res.render("errormsg", { title: "Ticketac" });
-});
-
-//GET Routes - Affiche les Users et les Voyages de la base de données
-router.get("/users", async (req, res, next) => {
   try {
-    const users = await userModel.find();
-    res.send(users);
-  } catch (err) {
-    res.send(err.messages);
-  }
-});
-
-router.get("/journeys", async (req, res, next) => {
-  try {
-    const journeys = await journeyModel.find();
-    res.send(journeys);
+    var user = await userModel.findById(req.session.user.id);
+    for (let i = 0; i < req.session.temporaryCards.length; i++) {
+      user.journeys.push(req.session.temporaryCards[i]._id);
+      await user.save();
+    }
+    // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
+    // user data comporte désormais les id des tickets
+    res.render("reservations", {
+      temporaryCards: req.session.temporaryCards,
+      totalPrice,
+    });
   } catch (err) {
     res.send(err.messages);
   }
