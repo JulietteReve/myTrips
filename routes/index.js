@@ -24,7 +24,7 @@ var date = [
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+  res.render("index", { title: "Ticketac" });
 });
 
 /* shop page */
@@ -40,8 +40,21 @@ router.get("/login", function (req, res, next) {
 /*POST to search journeys from Homepage */
 router.post("/search-journey", async (req, res, next) => {
   try {
-    const { from, to, date } = req.body;
-    res.render("shop");
+    const { departure, arrival, date } = req.body;
+
+    // Filtre de recherche à paramétrer : si aucun champ rempli alors msg erreur ..
+
+    const journeys = await journeyModel.find({
+      departure,
+      arrival,
+      date,
+    });
+    if (journeys.length) {
+      res.render("shop", { journeys });
+    } else {
+      console.log("no train available");
+      res.redirect("/error");
+    }
   } catch (err) {
     res.send(err.messages);
   }
@@ -57,6 +70,9 @@ router.get('/cart', async function (req, res, next){
 
   res.render('cart', { temporaryCards })
 })
+router.get("/error", (req, res, next) => {
+  res.render("errormsg", { title: "Ticketac" });
+});
 
 // Remplissage de la base de donnée, une fois suffit
 router.get("/save", async function (req, res, next) {
@@ -80,7 +96,7 @@ router.get("/save", async function (req, res, next) {
       await newUser.save();
     }
   }
-  res.render("index", { title: "Express" });
+  res.render("index", { title: "Ticketac" });
 });
 
 module.exports = router;
