@@ -84,6 +84,16 @@ router.post("/search-journey", async (req, res, next) => {
   }
 });
 
+router.get('/cart', async function (req, res, next){
+  var cart = await journeyModel.findById(req.query._id);
+  // console.log(cart);
+
+  var temporaryCards = [];
+  temporaryCards.push(cart)
+  console.log(temporaryCards)
+
+  res.render('cart', { temporaryCards })
+})
 router.get("/error", (req, res, next) => {
   res.render("errormsg", { title: "Ticketac" });
 });
