@@ -26,6 +26,10 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
+/* shop page */
+router.get("/shop", function (req, res, next) {
+  res.render("shop", { title: "Express" });
+});
 
 
 // Remplissage de la base de donnée, une fois suffit
