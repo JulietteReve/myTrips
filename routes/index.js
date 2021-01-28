@@ -1,4 +1,5 @@
 var express = require("express");
+var session = require("express-session");
 var router = express.Router();
 var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
@@ -26,7 +27,15 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
-
+/*POST to search journeys from Homepage */
+router.post("/search-journey", async (req, res, next) => {
+  try {
+    const { from, to, date } = req.body;
+    res.send({ from, to, date });
+  } catch (err) {
+    res.send(err.messages);
+  }
+});
 
 // Remplissage de la base de donnée, une fois suffit
 router.get("/save", async function (req, res, next) {
