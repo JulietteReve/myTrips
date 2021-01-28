@@ -28,15 +28,15 @@ router.get("/", function (req, res, next) {
 });
 
 
-/* GET signin page. */
-router.get("/signin", function (req, res, next) {
+/* GET signin signup page. */
+router.get("/signup", function (req, res, next) {
   res.render("sign");
 });
 
 /* POST signup page. */
-router.post("/signin", async function (req, res, next) {
+router.post("/signup", async function (req, res, next) {
   
-  var searchUser = await userModel.findOne({
+  try {var searchUser = await userModel.findOne({
     email: req.body.email
   })
   
@@ -50,18 +50,14 @@ router.post("/signin", async function (req, res, next) {
 
   var newUserSave = await newUser.save();
 
-  // req.session.user = {
-  //   email: newUserSave.email,
-  //   id: newUserSave._id,
-  // }
-
   console.log ('test', newUserSave)
 
-  res.redirect('/shop')
+  res.redirect('/')
 
 } else {
-  res.redirect('/shop')
-}
+  res.redirect('/sign')
+}}
+catch(err){res.send(err.messages)}
 
 });
 
