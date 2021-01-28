@@ -22,12 +22,16 @@ var date = [
   "2018-11-24",
 ];
 
-var temporaryCards = [];
+
 var totalPrice = 0;
 
 /* GET inscription page. */
 router.get("/", function (req, res, next) {
   res.render("sign", { title: "Ticketac" });
+});
+
+router.get("/cart", function (req, res, next) {
+  res.render("cart", {user: req.session.user, temporaryCards: req.session.temporaryCards, totalPrice });
 });
 
 
@@ -61,8 +65,8 @@ try {
     password: newUser.password,
     id : newUser._id
   };
-
-  console.log(req.session.user)
+  req.session.temporaryCards = [];
+  // console.log(req.session.user)
 
   // console.log ('test', newUserSave)
 
@@ -91,12 +95,12 @@ router.post("/signin", async function (req, res, next) {
       password: searchUser.password,
       id : searchUser._id
     };
+
+    req.session.temporaryCards = [];
     
   res.render('home', {user : req.session.user})
 
 } else {
-
- 
 
   res.redirect("sign")
 }}
@@ -118,12 +122,12 @@ router.post("/search-journey", async (req, res, next) => {
         date,
       });
       if (journeys.length) {
-        console.log(`Recherche: ${departure}-${arrival} on ${date}`);
+        //console.log(`Recherche: ${departure}-${arrival} on ${date}`);
         res.render("shop", { title: "Ticketac", journeys });
       } else {
-        console.log(
-          `no train available for ${departure}-${arrival} on ${date}`
-        );
+        // console.log(
+        //   `no train available for ${departure}-${arrival} on ${date}`
+        // );
         res.redirect("/error");
       }
     } else {
@@ -134,17 +138,27 @@ router.post("/search-journey", async (req, res, next) => {
   }
 });
 
-router.get("/cart", async function (req, res, next) {
+router.get("/add-cart", async function (req, res, next) {
   var cart = await journeyModel.findById(req.query._id);
-  temporaryCards.push(cart);
-  console.log(temporaryCards);
+  req.session.temporaryCards.push(cart);
+  
 
-  for (i = 0; i < temporaryCards.length; i++) {
-    totalPrice += temporaryCards[i].price;
+  for (i = 0; i < req.session.temporaryCards.length; i++) {
+    totalPrice += req.session.temporaryCards[i].price;
   }
 
-  res.render("cart", { temporaryCards, totalPrice });
+  res.render("cart", { temporaryCards: req.session.temporaryCards, totalPrice });
 });
+
+router.get("/confirm-cart", async function (req, res, next) {
+  
+  
+  
+  
+
+  res.render("reservations", { temporaryCards: req.session.temporaryCards, totalPrice });
+});
+
 
 router.get("/error", (req, res, next) => {
   res.render("errormsg", { title: "Ticketac" });
