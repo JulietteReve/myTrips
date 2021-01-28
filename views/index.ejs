@@ -11,19 +11,19 @@
 
     <div class="container mt-4">
       <div class="row">
-        <h3>One-way ticket :</h3>
+        <h3 class='text-light'>One-way ticket :</h3>
       </div>
       <div class="row justify-content-around mt-3">
         <form action="/search-journey" method="POST">
           <div class="form-row justify-content-center">
             <div class="col">
-              <input type="text" class="form-control" placeholder="From: Paris, Marseille...">
+              <input type="text" class="form-control" placeholder="From: Paris, Marseille..." name="from">
             </div>
             <div class="col">
-              <input type="text" class="form-control" placeholder="To: Lille, Nantes...">
+              <input type="text" class="form-control" placeholder="To: Lille, Nantes..." name="to">
             </div>
             <div class="col">
-              <input type="date" class="form-control">
+              <input type="date" class="form-control" name="date">
             </div>
             <div class="col">
               <button class="btn btn-danger">Go</button>
