@@ -30,7 +30,8 @@ router.get("/", function (req, res, next) {
 /* shop page */
 router.get("/shop", function (req, res, next) {
   res.render("shop", { });
-  
+});
+
 /* GET login page. */
 router.get("/login", function (req, res, next) {
   res.render("sign", { title: "Express" });
@@ -45,6 +46,17 @@ router.post("/search-journey", async (req, res, next) => {
     res.send(err.messages);
   }
 });
+
+router.get('/cart', async function (req, res, next){
+  var cart = await journeyModel.findById(req.query._id);
+  // console.log(cart);
+
+  var temporaryCards = [];
+  temporaryCards.push(cart)
+  console.log(temporaryCards)
+
+  res.render('cart', { temporaryCards })
+})
 
 // Remplissage de la base de donnée, une fois suffit
 router.get("/save", async function (req, res, next) {

@@ -1,12 +1,43 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Cart</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel='stylesheet' href='./stylesheets/style.css' />
   </head>
   <body>
+    <%- include('header'); %>
 
+    <div class=container>
+      <div class="row">
+
+        <h2 class="list-group col-8 mt-5 mx-auto text-white">My Tickets</h2>
+
+        <!-- <ul class="list-group col-8 mt-4 mx-auto"> -->
+          <table class="table table-light">
+            <thead>
+              <tr>
+                <th scope="col">N°</th>
+                <th scope="col">Journey</th>
+                <th scope="col">Date</th>
+                <th scope="col">Departure time</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (i=0; i<temporaryCards.length; i++) { %>
+              <tr>
+                <th scope="row"><%= i %></th>
+                <td><%= temporaryCards[i].departure %> / <%= temporaryCards[i].arrival %></td>
+                <td><%= temporaryCards[i].date.toLocaleString() %></td>
+                <td><%= %></td>
+                <td><%= temporaryCards[i].price %></td>
+              </tr>
+            </tbody>
+          </table>
+
+      </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
