@@ -28,7 +28,7 @@ router.get("/", function (req, res, next) {
 
 /* shop page */
 router.get("/shop", function (req, res, next) {
-  res.render("shop", { title: "Express" });
+  res.render("shop", { });
 });
 
 
