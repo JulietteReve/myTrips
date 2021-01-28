@@ -7,6 +7,65 @@
   </head>
   <body>
 
+    <%- include('header'); %>
+
+    <div class= container>
+    
+    <div class="row">
+
+
+      <!-- SIGN IN AREA -->
+      <div class="col-12 col-sm-6 text-center mt-5">
+
+        <div class="formArea">
+
+          <h4 class="titleForm">Sign In</h4>
+
+          <form action="/sign-in" method="POST">
+            <div class="form-group">
+              <input name="emailFromFront" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input name="passwordFromFront" type="password" class="form-control" placeholder="Password">
+            </div>
+
+            <button type="submit" class="btn btn-danger">Confirm</button>
+          </form>
+
+        </div>
+
+      </div>
+
+      <!-- SIGN UP AREA -->
+      <div class="col-12 col-sm-6 text-center mt-5">
+
+        <div class="formArea">
+          <h4 class="titleForm">Sign Up</h4>
+
+          <form action="/sign-up" method="POST">
+            <div class="form-group">
+              <input name="lastnameFromFront" type="text" class="form-control" placeholder="Name">
+            </div>
+            <div class="form-group">
+              <input name="firstnameFromFront" type="text" class="form-control" placeholder="First Name">
+            </div>
+            <div class="form-group">
+              <input name="emailFromFront" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input name="passwordFromFront" type="password" class="form-control"  placeholder="Password">
+            </div>
+
+            <button type="submit" class="btn btn-danger">Confirm</button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

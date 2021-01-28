@@ -26,6 +26,10 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
+/* GET login page. */
+router.get("/login", function (req, res, next) {
+  res.render("sign", { title: "Express" });
+});
 
 
 // Remplissage de la base de donnée, une fois suffit
