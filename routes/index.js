@@ -31,7 +31,7 @@ router.get("/", function (req, res, next) {
 router.post("/search-journey", async (req, res, next) => {
   try {
     const { from, to, date } = req.body;
-    res.send({ from, to, date });
+    res.render("shop");
   } catch (err) {
     res.send(err.messages);
   }
