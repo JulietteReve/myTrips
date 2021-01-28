@@ -59,7 +59,7 @@ router.post("/signup", async function (req, res, next) {
   res.redirect('/home')
 
 } else {
-  res.redirect('/sign')
+  res.redirect('/')
 }}
 catch(err){res.send(err.messages)}
 
