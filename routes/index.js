@@ -27,9 +27,42 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
-/* GET login page. */
-router.get("/login", function (req, res, next) {
-  res.render("sign", { title: "Express" });
+
+/* GET signin page. */
+router.get("/signin", function (req, res, next) {
+  res.render("sign");
+});
+
+/* POST signup page. */
+router.post("/signin", async function (req, res, next) {
+  
+  var searchUser = await userModel.findOne({
+    email: req.body.email
+  })
+  
+  if(!searchUser){
+  var newUser = new userModel({
+    lastname: req.body.lastname,
+    firstname: req.body.firstname,
+    email: req.body.email,
+    password: req.body.password,
+  })
+
+  var newUserSave = await newUser.save();
+
+  // req.session.user = {
+  //   email: newUserSave.email,
+  //   id: newUserSave._id,
+  // }
+
+  console.log ('test', newUserSave)
+
+  res.redirect('/shop')
+
+} else {
+  res.redirect('/shop')
+}
+
 });
 
 /*POST to search journeys from Homepage */
