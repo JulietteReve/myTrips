@@ -24,14 +24,23 @@ var date = [
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+  res.render("index", { title: "Ticketac" });
 });
 
 /*POST to search journeys from Homepage */
 router.post("/search-journey", async (req, res, next) => {
   try {
-    const { from, to, date } = req.body;
-    res.render("shop");
+    const { departure, arrival, date } = req.body;
+    const journeys = await journeyModel.find({
+      departure,
+      arrival,
+      date,
+    });
+    if (journeys) {
+      res.render("shop", { journeys });
+    } else {
+      res.render("error", { title: "Ticketac" });
+    }
   } catch (err) {
     res.send(err.messages);
   }
@@ -59,7 +68,7 @@ router.get("/save", async function (req, res, next) {
       await newUser.save();
     }
   }
-  res.render("index", { title: "Express" });
+  res.render("index", { title: "Ticketac" });
 });
 
 module.exports = router;
