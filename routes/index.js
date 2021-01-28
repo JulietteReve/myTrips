@@ -25,13 +25,13 @@ var date = [
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Ticketac" });
+  res.render("sign", { title: "Ticketac" });
 });
 
 
 /* GET signin signup page. */
-router.get("/signup", function (req, res, next) {
-  res.render("sign");
+router.get("/home", function (req, res, next) {
+  res.render("home", { title: "Ticketac" });
 });
 
 /* POST signup page. */
@@ -51,9 +51,9 @@ router.post("/signup", async function (req, res, next) {
 
   var newUserSave = await newUser.save();
 
-  console.log ('test', newUserSave)
+  // console.log ('test', newUserSave)
 
-  res.redirect('/')
+  res.redirect('/home')
 
 } else {
   res.redirect('/sign')
@@ -72,7 +72,7 @@ router.post("/signin", async function (req, res, next) {
   
   if(searchUser!=null){
     
-  res.redirect('/')
+  res.redirect('/home')
 
 } else {
   res.render("sign")
