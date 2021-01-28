@@ -36,19 +36,27 @@ router.get("/login", function (req, res, next) {
 router.post("/search-journey", async (req, res, next) => {
   try {
     const { departure, arrival, date } = req.body;
+
+    // Filtre de recherche à paramétrer : si aucun champ rempli alors msg erreur ..
+
     const journeys = await journeyModel.find({
       departure,
       arrival,
       date,
     });
-    if (journeys) {
+    if (journeys.length) {
       res.render("shop", { journeys });
     } else {
-      res.render("error", { title: "Ticketac" });
+      console.log("no train available");
+      res.redirect("/error");
     }
   } catch (err) {
     res.send(err.messages);
   }
+});
+
+router.get("/error", (req, res, next) => {
+  res.render("error", { title: "Ticketac" });
 });
 
 // Remplissage de la base de donnée, une fois suffit
