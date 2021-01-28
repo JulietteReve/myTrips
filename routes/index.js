@@ -27,6 +27,11 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Ticketac" });
 });
 
+/* GET login page. */
+router.get("/login", function (req, res, next) {
+  res.render("sign", { title: "Express" });
+});
+
 /*POST to search journeys from Homepage */
 router.post("/search-journey", async (req, res, next) => {
   try {
