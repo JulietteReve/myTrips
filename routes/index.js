@@ -1,5 +1,4 @@
 var express = require("express");
-var session = require("express-session");
 var router = express.Router();
 var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
