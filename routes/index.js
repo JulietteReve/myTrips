@@ -30,78 +30,83 @@ router.get("/", function (req, res, next) {
   res.render("sign", { title: "Ticketac" });
 });
 
-
-/* GET home page. */
-router.get("/home", function (req, res, next) {
-  res.render("home", { title: "Ticketac", user: req.session.user });
-});
-
 /* POST signup page. */
 router.post("/signup", async function (req, res, next) {
-  
-try {
+  try {
     var searchUser = await userModel.findOne({
-    email: req.body.email
-  })
-  
-  if(!searchUser){
-  var newUser = new userModel({
-    lastname: req.body.lastname,
-    firstname: req.body.firstname,
-    email: req.body.email,
-    password: req.body.password,
-  })
+      email: req.body.email,
+    });
 
-  var newUserSave = await newUser.save();
+    if (!searchUser) {
+      var newUser = new userModel({
+        lastname: req.body.lastname,
+        firstname: req.body.firstname,
+        email: req.body.email,
+        password: req.body.password,
+      });
 
-  req.session.user = {
-    lastname: newUser.lastname,
-    firstname: newUser.firstname,
-    email: newUser.email,
-    password: newUser.password,
-    id : newUser._id
-  };
+      var newUserSave = await newUser.save();
 
-  console.log(req.session.user)
+      req.session.user = {
+        lastname: newUser.lastname,
+        firstname: newUser.firstname,
+        email: newUser.email,
+        password: newUser.password,
+        id: newUser._id,
+      };
 
-  // console.log ('test', newUserSave)
+      console.log(req.session.user);
 
-  res.render("home", {user : req.session.user})
+      // console.log ('test', newUserSave)
 
-} else {
-  res.redirect('/')
-}}
-catch(err){res.send(err.messages)}
+      res.render("home", { user: req.session.user });
+    } else {
+      res.redirect("/");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
 });
 
 /* POST signin page. */
 router.post("/signin", async function (req, res, next) {
-  
-  try {var searchUser = await userModel.findOne({
-    email: req.body.email, 
-    password: req.body.password
-  })
-  
-  if(searchUser!=null){
+  try {
+    var searchUser = await userModel.findOne({
+      email: req.body.email,
+      password: req.body.password,
+    });
 
-    req.session.user = {
-      lastname: searchUser.lastname,
-      firstname: searchUser.firstname,
-      email: searchUser.email,
-      password: searchUser.password,
-      id : searchUser._id
-    };
-    
-  res.render('home', {user : req.session.user})
+    if (searchUser != null) {
+      req.session.user = {
+        lastname: searchUser.lastname,
+        firstname: searchUser.firstname,
+        email: searchUser.email,
+        password: searchUser.password,
+        id: searchUser._id,
+      };
 
-} else {
+      res.render("home", { user: req.session.user });
+    } else {
+      res.redirect("/");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
+});
 
- 
+/*GET Log out */
+router.get("/logout", (req, res, next) => {
+  req.session.user = null;
+  res.redirect("/");
+});
 
-  res.redirect("sign")
-}}
-catch(err){res.send(err.messages)}
-
+/* GET home page. */
+router.get("/home", function (req, res, next) {
+  if (req.session.user) {
+    res.render("home", { title: "Ticketac", user: req.session.user });
+  } else {
+    res.redirect("/");
+  }
 });
 
 /*POST to search journeys from Homepage */
@@ -150,29 +155,23 @@ router.get("/error", (req, res, next) => {
   res.render("errormsg", { title: "Ticketac" });
 });
 
-// Remplissage de la base de donnée, une fois suffit
-router.get("/save", async function (req, res, next) {
-  // How many journeys we want
-  var count = 300;
-
-  // Save  ---------------------------------------------------
-  for (var i = 0; i < count; i++) {
-    departureCity = city[Math.floor(Math.random() * Math.floor(city.length))];
-    arrivalCity = city[Math.floor(Math.random() * Math.floor(city.length))];
-
-    if (departureCity != arrivalCity) {
-      var newUser = new journeyModel({
-        departure: departureCity,
-        arrival: arrivalCity,
-        date: date[Math.floor(Math.random() * Math.floor(date.length))],
-        departureTime: Math.floor(Math.random() * Math.floor(23)) + ":00",
-        price: Math.floor(Math.random() * Math.floor(125)) + 25,
-      });
-
-      await newUser.save();
-    }
+//GET Routes - Affiche les Users et les Voyages de la base de données
+router.get("/users", async (req, res, next) => {
+  try {
+    const users = await userModel.find();
+    res.send(users);
+  } catch (err) {
+    res.send(err.messages);
   }
-  res.render("index", { title: "Ticketac" });
+});
+
+router.get("/journeys", async (req, res, next) => {
+  try {
+    const journeys = await journeyModel.find();
+    res.send(journeys);
+  } catch (err) {
+    res.send(err.messages);
+  }
 });
 
 module.exports = router;
