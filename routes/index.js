@@ -56,7 +56,7 @@ router.post("/search-journey", async (req, res, next) => {
 });
 
 router.get("/error", (req, res, next) => {
-  res.render("error", { title: "Ticketac" });
+  res.render("errormsg", { title: "Ticketac" });
 });
 
 // Remplissage de la base de donnée, une fois suffit
