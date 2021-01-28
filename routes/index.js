@@ -3,6 +3,7 @@ var session = require("express-session");
 var router = express.Router();
 var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
+var { capitalizing } = require("../helper");
 
 var city = [
   "Paris",
@@ -30,21 +31,65 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Ticketac" });
 });
 
-/* shop page */
-router.get("/shop", function (req, res, next) {
-  res.render("shop", { });
+
+/* GET signin signup page. */
+router.get("/signup", function (req, res, next) {
+  res.render("sign");
 });
 
-/* GET login page. */
-router.get("/login", function (req, res, next) {
-  res.render("sign", { title: "Express" });
+/* POST signup page. */
+router.post("/signup", async function (req, res, next) {
+  
+  try {var searchUser = await userModel.findOne({
+    email: req.body.email
+  })
+  
+  if(!searchUser){
+  var newUser = new userModel({
+    lastname: req.body.lastname,
+    firstname: req.body.firstname,
+    email: req.body.email,
+    password: req.body.password,
+  })
+
+  var newUserSave = await newUser.save();
+
+  console.log ('test', newUserSave)
+
+  res.redirect('/')
+
+} else {
+  res.redirect('/sign')
+}}
+catch(err){res.send(err.messages)}
+
+});
+
+/* POST signin page. */
+router.post("/signin", async function (req, res, next) {
+  
+  try {var searchUser = await userModel.findOne({
+    email: req.body.email, 
+    password: req.body.password
+  })
+  
+  if(searchUser!=null){
+    
+  res.redirect('/')
+
+} else {
+  res.render("sign")
+}}
+catch(err){res.send(err.messages)}
+
 });
 
 /*POST to search journeys from Homepage */
 router.post("/search-journey", async (req, res, next) => {
   try {
-    const { departure, arrival, date } = req.body;
-
+    let { departure, arrival, date } = req.body;
+    departure = capitalizing(departure.toLowerCase());
+    arrival = capitalizing(arrival.toLowerCase());
     // Filtre de recherche à paramétrer : si aucun champ rempli alors msg erreur ..
 
     const journeys = await journeyModel.find({
@@ -53,9 +98,10 @@ router.post("/search-journey", async (req, res, next) => {
       date,
     });
     if (journeys.length) {
-      res.render("shop", { journeys });
+      console.log(`Recherche: ${departure}-${arrival} on ${date}`);
+      res.render("shop", { title: "Ticketac", journeys });
     } else {
-      console.log("no train available");
+      console.log(`no train available for ${departure}-${arrival} on ${date}`);
       res.redirect("/error");
     }
   } catch (err) {
