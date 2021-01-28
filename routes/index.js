@@ -61,6 +61,25 @@ catch(err){res.send(err.messages)}
 
 });
 
+/* POST signin page. */
+router.post("/signin", async function (req, res, next) {
+  
+  try {var searchUser = await userModel.findOne({
+    email: req.body.email, 
+    password: req.body.password
+  })
+  
+  if(searchUser!=null){
+    
+  res.redirect('/')
+
+} else {
+  res.render("sign")
+}}
+catch(err){res.send(err.messages)}
+
+});
+
 /*POST to search journeys from Homepage */
 router.post("/search-journey", async (req, res, next) => {
   try {
