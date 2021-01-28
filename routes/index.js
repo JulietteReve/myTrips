@@ -31,7 +31,6 @@ router.get("/", function (req, res, next) {
   res.render("sign", { title: "Ticketac" });
 });
 
-
 /* GET signin signup page. */
 router.get("/home", function (req, res, next) {
   res.render("home", { title: "Ticketac" });
@@ -39,88 +38,91 @@ router.get("/home", function (req, res, next) {
 
 /* POST signup page. */
 router.post("/signup", async function (req, res, next) {
-  
-  try {var searchUser = await userModel.findOne({
-    email: req.body.email
-  })
-  
-  if(!searchUser){
-  var newUser = new userModel({
-    lastname: req.body.lastname,
-    firstname: req.body.firstname,
-    email: req.body.email,
-    password: req.body.password,
-  })
-
-  var newUserSave = await newUser.save();
-
-  // console.log ('test', newUserSave)
-
-  res.redirect('/home')
-
-} else {
-  res.redirect('/sign')
-}}
-catch(err){res.send(err.messages)}
-
-});
-
-/* POST signin page. */
-router.post("/signin", async function (req, res, next) {
-  
-  try {var searchUser = await userModel.findOne({
-    email: req.body.email, 
-    password: req.body.password
-  })
-  
-  if(searchUser!=null){
-    
-  res.redirect('/home')
-
-} else {
-  res.render("sign")
-}}
-catch(err){res.send(err.messages)}
-
-});
-
-/*POST to search journeys from Homepage */
-router.post("/search-journey", async (req, res, next) => {
   try {
-    let { departure, arrival, date } = req.body;
-    departure = capitalizing(departure.toLowerCase());
-    arrival = capitalizing(arrival.toLowerCase());
-    // Filtre de recherche à paramétrer : si aucun champ rempli alors msg erreur ..
-
-    const journeys = await journeyModel.find({
-      departure,
-      arrival,
-      date,
+    var searchUser = await userModel.findOne({
+      email: req.body.email,
     });
-    if (journeys.length) {
-      console.log(`Recherche: ${departure}-${arrival} on ${date}`);
-      res.render("shop", { title: "Ticketac", journeys });
+
+    if (!searchUser) {
+      var newUser = new userModel({
+        lastname: req.body.lastname,
+        firstname: req.body.firstname,
+        email: req.body.email,
+        password: req.body.password,
+      });
+
+      var newUserSave = await newUser.save();
+
+      // console.log ('test', newUserSave)
+
+      res.redirect("/home");
     } else {
-      console.log(`no train available for ${departure}-${arrival} on ${date}`);
-      res.redirect("/error");
+      res.redirect("/sign");
     }
   } catch (err) {
     res.send(err.messages);
   }
 });
 
-router.get('/cart', async function (req, res, next){
-  var cart = await journeyModel.findById(req.query._id);
-  temporaryCards.push(cart)
-  console.log(temporaryCards)
+/* POST signin page. */
+router.post("/signin", async function (req, res, next) {
+  try {
+    var searchUser = await userModel.findOne({
+      email: req.body.email,
+      password: req.body.password,
+    });
 
-  for (i=0; i<temporaryCards.length; i++) {
+    if (searchUser != null) {
+      res.redirect("/home");
+    } else {
+      res.render("sign");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
+});
+
+/*POST to search journeys from Homepage */
+router.post("/search-journey", async (req, res, next) => {
+  try {
+    let { departure, arrival, date } = req.body;
+    // Filtre de recherche à affiner
+    if (departure && arrival && date) {
+      departure = capitalizing(departure.toLowerCase());
+      arrival = capitalizing(arrival.toLowerCase());
+      const journeys = await journeyModel.find({
+        departure,
+        arrival,
+        date,
+      });
+      if (journeys.length) {
+        console.log(`Recherche: ${departure}-${arrival} on ${date}`);
+        res.render("shop", { title: "Ticketac", journeys });
+      } else {
+        console.log(
+          `no train available for ${departure}-${arrival} on ${date}`
+        );
+        res.redirect("/error");
+      }
+    } else {
+      res.redirect("/home");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
+});
+
+router.get("/cart", async function (req, res, next) {
+  var cart = await journeyModel.findById(req.query._id);
+  temporaryCards.push(cart);
+  console.log(temporaryCards);
+
+  for (i = 0; i < temporaryCards.length; i++) {
     totalPrice += temporaryCards[i].price;
   }
 
-  res.render('cart', { temporaryCards, totalPrice })
-})
-
+  res.render("cart", { temporaryCards, totalPrice });
+});
 
 router.get("/error", (req, res, next) => {
   res.render("errormsg", { title: "Ticketac" });
