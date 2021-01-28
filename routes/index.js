@@ -25,15 +25,15 @@ var date = [
 var temporaryCards = [];
 var totalPrice = 0;
 
-/* GET home page. */
+/* GET inscription page. */
 router.get("/", function (req, res, next) {
   res.render("sign", { title: "Ticketac" });
 });
 
 
-/* GET signin signup page. */
+/* GET home page. */
 router.get("/home", function (req, res, next) {
-  res.render("home", { title: "Ticketac" });
+  res.render("home", { title: "Ticketac", user: req.session.user });
 });
 
 /* POST signup page. */
@@ -53,9 +53,19 @@ router.post("/signup", async function (req, res, next) {
 
   var newUserSave = await newUser.save();
 
+  req.session.user = {
+    lastname: newUser.lastname,
+    firstname: newUser.firstname,
+    email: newUser.email,
+    password: newUser.password,
+    id : newUser._id
+  };
+
+  console.log(req.session.user)
+
   // console.log ('test', newUserSave)
 
-  res.redirect('/home')
+  res.render("home", {user : req.session.user})
 
 } else {
   res.redirect('/')
@@ -73,11 +83,22 @@ router.post("/signin", async function (req, res, next) {
   })
   
   if(searchUser!=null){
+
+    req.session.user = {
+      lastname: searchUser.lastname,
+      firstname: searchUser.firstname,
+      email: searchUser.email,
+      password: searchUser.password,
+      id : searchUser._id
+    };
     
-  res.redirect('/home')
+  res.render('home', {user : req.session.user})
 
 } else {
-  res.render("sign")
+
+ 
+
+  res.redirect("sign")
 }}
 catch(err){res.send(err.messages)}
 
