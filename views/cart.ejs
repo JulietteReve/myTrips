@@ -14,7 +14,7 @@
         <h2 class="list-group col-8 mt-5 mx-auto text-white">My Tickets</h2>
 
         <!-- <ul class="list-group col-8 mt-4 mx-auto"> -->
-          <table class="table table-light">
+          <table class="table table-light mt-3">
             <thead>
               <tr>
                 <th scope="col">N°</th>
@@ -29,15 +29,24 @@
               <tr>
                 <th scope="row"><%= i +1 %></th>
                 <td><%= temporaryCards[i].departure %> / <%= temporaryCards[i].arrival %></td>
-                <td><%= temporaryCards[i].date.toLocaleString() %></td>
-                <td><%= %></td>
+                <td><%= temporaryCards[i].date.toLocaleDateString() %></td>
+                <td><%= temporaryCards[i].departureTime %></td>
                 <td><%= temporaryCards[i].price %></td>
               </tr>
               <% } %>
+              <tr class="list-group-item-danger">
+                <th scope="row">TOTAL</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><%= totalPrice %> €</td>
+              </tr>
             </tbody>
           </table>
-
       </div>
+      <div class="row d-flex justify-content-end">
+        <button type="button" class="btn btn-danger">Confirm</button>
+      </div>   
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

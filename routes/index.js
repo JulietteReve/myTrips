@@ -22,6 +22,9 @@ var date = [
   "2018-11-24",
 ];
 
+var temporaryCards = [];
+var totalPrice = 0;
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Ticketac" });
@@ -62,14 +65,17 @@ router.post("/search-journey", async (req, res, next) => {
 
 router.get('/cart', async function (req, res, next){
   var cart = await journeyModel.findById(req.query._id);
-  // console.log(cart);
-
-  var temporaryCards = [];
   temporaryCards.push(cart)
   console.log(temporaryCards)
 
-  res.render('cart', { temporaryCards })
+  for (i=0; i<temporaryCards.length; i++) {
+    totalPrice += temporaryCards[i].price;
+  }
+
+  res.render('cart', { temporaryCards, totalPrice })
 })
+
+
 router.get("/error", (req, res, next) => {
   res.render("errormsg", { title: "Ticketac" });
 });
