@@ -28,9 +28,38 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Ticketac" });
 });
 
-/* GET login page. */
-router.get("/login", function (req, res, next) {
-  res.render("sign", { title: "Express" });
+
+/* GET signin signup page. */
+router.get("/signup", function (req, res, next) {
+  res.render("sign");
+});
+
+/* POST signup page. */
+router.post("/signup", async function (req, res, next) {
+  
+  try {var searchUser = await userModel.findOne({
+    email: req.body.email
+  })
+  
+  if(!searchUser){
+  var newUser = new userModel({
+    lastname: req.body.lastname,
+    firstname: req.body.firstname,
+    email: req.body.email,
+    password: req.body.password,
+  })
+
+  var newUserSave = await newUser.save();
+
+  console.log ('test', newUserSave)
+
+  res.redirect('/')
+
+} else {
+  res.redirect('/sign')
+}}
+catch(err){res.send(err.messages)}
+
 });
 
 /*POST to search journeys from Homepage */
@@ -58,6 +87,16 @@ router.post("/search-journey", async (req, res, next) => {
   }
 });
 
+router.get('/cart', async function (req, res, next){
+  var cart = await journeyModel.findById(req.query._id);
+  // console.log(cart);
+
+  var temporaryCards = [];
+  temporaryCards.push(cart)
+  console.log(temporaryCards)
+
+  res.render('cart', { temporaryCards })
+})
 router.get("/error", (req, res, next) => {
   res.render("errormsg", { title: "Ticketac" });
 });
