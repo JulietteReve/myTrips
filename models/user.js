@@ -18,10 +18,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  journeys: {
+  journeys: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "journeys",
-  },
+  }],
 });
 
 const userModel = mongoose.model("users", userSchema);

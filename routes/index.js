@@ -161,11 +161,22 @@ router.get("/add-cart", async function (req, res, next) {
 
 router.get("/confirm-cart", async function (req, res, next) {
   
+  // console.log('hello', req.session.user._id)
+   
+  // var user = await userModel.findById(req.session.user._id);
   
-  
+  // console.log('coucou', user)
+
+  // for (i=0; i<req.session.temporaryCards[i].length; i++) {
+  //   user.journeys.push(req.session.temporaryCards[i]._id);
+  //   await user.save()
+  // }
   
 
-  res.render("reservations", { temporaryCards: req.session.temporaryCards, totalPrice });
+  
+  
+    res.send();
+  // res.render("reservations", { temporaryCards: req.session.temporaryCards, totalPrice });
 });
 
 
