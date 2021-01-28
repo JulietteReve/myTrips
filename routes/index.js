@@ -1,5 +1,4 @@
 var express = require("express");
-var session = require("express-session");
 var router = express.Router();
 var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
@@ -42,7 +41,6 @@ router.post("/signup", async function (req, res, next) {
     var searchUser = await userModel.findOne({
       email: req.body.email,
     });
-
     if (!searchUser) {
       var newUser = new userModel({
         lastname: req.body.lastname,
@@ -50,14 +48,13 @@ router.post("/signup", async function (req, res, next) {
         email: req.body.email,
         password: req.body.password,
       });
-
       var newUserSave = await newUser.save();
 
       // console.log ('test', newUserSave)
 
       res.redirect("/home");
     } else {
-      res.redirect("/sign");
+      res.redirect("/");
     }
   } catch (err) {
     res.send(err.messages);
