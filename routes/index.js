@@ -3,6 +3,7 @@ var session = require("express-session");
 var router = express.Router();
 var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
+var { capitalizing } = require("../helper");
 
 var city = [
   "Paris",
@@ -35,8 +36,9 @@ router.get("/login", function (req, res, next) {
 /*POST to search journeys from Homepage */
 router.post("/search-journey", async (req, res, next) => {
   try {
-    const { departure, arrival, date } = req.body;
-
+    let { departure, arrival, date } = req.body;
+    departure = capitalizing(departure.toLowerCase());
+    arrival = capitalizing(arrival.toLowerCase());
     // Filtre de recherche à paramétrer : si aucun champ rempli alors msg erreur ..
 
     const journeys = await journeyModel.find({
@@ -45,9 +47,10 @@ router.post("/search-journey", async (req, res, next) => {
       date,
     });
     if (journeys.length) {
-      res.render("shop", { journeys });
+      console.log(`Recherche: ${departure}-${arrival} on ${date}`);
+      res.render("shop", { title: "Ticketac", journeys });
     } else {
-      console.log("no train available");
+      console.log(`no train available for ${departure}-${arrival} on ${date}`);
       res.redirect("/error");
     }
   } catch (err) {
