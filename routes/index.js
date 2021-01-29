@@ -3,7 +3,6 @@ var router = express.Router();
 var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
 var { capitalizing } = require("../helper");
-const session = require("express-session");
 
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
@@ -11,7 +10,11 @@ router.get("/", function (req, res, next) {
     signUp: "",
     signIn: "",
   };
-  res.render("sign", { title: "Ticketac", errMsg });
+  if (req.session.user) {
+    res.redirect("/home");
+  } else {
+    res.render("sign", { title: "Ticketac", errMsg });
+  }
 });
 
 // POST - Sign-Up
@@ -130,7 +133,11 @@ router.post("/search-journey", async (req, res, next) => {
         arrival,
       });
       if (journeys.length) {
-        res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
+        res.render("shop", {
+          title: "Ticketac",
+          journeys,
+          user: req.session.user,
+        });
       } else {
         //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
@@ -161,10 +168,10 @@ router.get("/cart", function (req, res, next) {
 router.get("/add-cart", async function (req, res, next) {
   var cart = await journeyModel.findById(req.query._id);
   alreadyExist = false;
-  
-  for (i=0; i<req.session.temporaryCards.length; i++) {
+
+  for (i = 0; i < req.session.temporaryCards.length; i++) {
     if (req.query._id === req.session.temporaryCards[i]._id) {
-      alreadyExist = true
+      alreadyExist = true;
     }
   }
 
@@ -176,7 +183,7 @@ router.get("/add-cart", async function (req, res, next) {
   res.render("cart", {
     temporaryCards: req.session.temporaryCards,
     totalPrice: req.session.totalPrice,
-    user: req.session.user
+    user: req.session.user,
   });
 });
 
@@ -191,7 +198,7 @@ router.get("/backtoshop", async function (req, res, next) {
         departure,
         arrival,
         date,
-      });      
+      });
       if (journeys.length) {
         res.render("shop", {
           title: "Ticketac",
@@ -209,9 +216,11 @@ router.get("/backtoshop", async function (req, res, next) {
         arrival,
       });
       if (journeys.length) {
-        res.render("shop", { title: "Ticketac", 
-        journeys, 
-        user: req.session.user, });
+        res.render("shop", {
+          title: "Ticketac",
+          journeys,
+          user: req.session.user,
+        });
       } else {
         //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
