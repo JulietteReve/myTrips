@@ -87,7 +87,7 @@ router.post("/signin", async function (req, res, next) {
       firstname: searchUser.firstname,
       email: searchUser.email,
       password: searchUser.password,
-      id : searchUser._id
+      _id : searchUser._id
     };
 
     req.session.temporaryCards = [];
@@ -161,22 +161,18 @@ router.get("/add-cart", async function (req, res, next) {
 
 router.get("/confirm-cart", async function (req, res, next) {
   
-  // console.log('hello', req.session.user._id)
+console.log(req.session.temporaryCards);
    
-  // var user = await userModel.findById(req.session.user._id);
+  var user = await userModel.findById(req.session.user._id);
   
-  // console.log('coucou', user)
-
-  // for (i=0; i<req.session.temporaryCards[i].length; i++) {
-  //   user.journeys.push(req.session.temporaryCards[i]._id);
-  //   await user.save()
-  // }
   
 
-  
-  
-    res.send();
-  // res.render("reservations", { temporaryCards: req.session.temporaryCards, totalPrice });
+  for (i=0; i<req.session.temporaryCards.length; i++) {
+    user.journeys.push(req.session.temporaryCards[i]._id);
+  }
+  await user.save()
+
+  res.render("reservations", { temporaryCards: req.session.temporaryCards, totalPrice });
 });
 
 
