@@ -27,7 +27,10 @@ const searchCities = async (searchText, matchInp) => {
 const passToHtml = (matches, matchInp) => {
   if (matches.length > 0) {
     const html = matches
-      .map((match) => `<div class="list-group-item"><p>${match}</p></div>`)
+      .map(
+        (match) =>
+          `<div class="list-group-item"><p class="p-0 m-0">${match}</p></div>`
+      )
       .join("");
     matchInp.html(html);
   }
