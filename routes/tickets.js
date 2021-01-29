@@ -1,12 +1,12 @@
 var express = require("express");
 var router = express.Router();
-const userModel = require("../models/user");
+const journeyModel = require("../models/journey");
 
-/* GET users listing. */
+/* GET tickets listing. */
 router.get("/", async (req, res, next) => {
   try {
-    const users = await userModel.find();
-    res.send(users);
+    const journeys = await journeyModel.find();
+    res.send(journeys);
   } catch (err) {
     res.send(err.messages);
   }
