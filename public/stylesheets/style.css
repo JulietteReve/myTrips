@@ -5,7 +5,23 @@ height: 100vh;
 box-sizing: border-box;
 background: linear-gradient(to bottom, rgba(197,222,234,1) 0%,rgba(138,187,215,1) 31%,rgba(6,109,171,1) 100%);
 background-repeat: no-repeat;
-background-size: cover
+background-size: cover;
+font-family: 'Work Sans', sans-serif;
+}
+
+.navbar {
+  font-family: 'Roboto', sans-serif;
+  align-content: space-between;
+  justify-content: space-between;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size:xx-large;
+}
+
+#pictotitle {
+  align-items: center;
 }
 
 a {
@@ -13,5 +29,5 @@ a {
 }
 
 .train {
-  width: 40%;
+  width: 55%;
 }
