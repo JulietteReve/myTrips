@@ -9,7 +9,6 @@ arrival.attr("autocomplete", "off");
 
 //Function to search and filter your research and match with db
 const searchCities = async (searchText, matchInp) => {
-  console.log(matchInp);
   const res = await fetch("http://localhost:3000/tickets/get-departures");
   const cities = await res.json();
   let matches = cities.filter((city) => {
@@ -22,8 +21,6 @@ const searchCities = async (searchText, matchInp) => {
     matchInp.html("");
   }
   passToHtml(matches, matchInp);
-  console.log(matches);
-  console.log(matchInp.innerHTML);
 };
 
 //Function to pass content to HTML
