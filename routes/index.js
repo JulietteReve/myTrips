@@ -22,11 +22,13 @@ var date = [
   "2018-11-24",
 ];
 
-
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
-  
-  res.render("sign", { title: "Ticketac" });
+  const errMsg = {
+    signUp: "",
+    signIn: "",
+  };
+  res.render("sign", { title: "Ticketac", errMsg });
 });
 
 // POST - Sign-Up
@@ -57,7 +59,11 @@ router.post("/signup", async function (req, res, next) {
       req.session.totalPrice = 0;
       res.render("home", { user: req.session.user });
     } else {
-      res.redirect("/");
+      const errMsg = {
+        signUp: "Email déjà utilisé",
+        signIn: "",
+      };
+      res.render("sign", { title: "Ticketac", errMsg });
     }
   } catch (err) {
     res.send(err.messages);
@@ -86,7 +92,11 @@ router.post("/signin", async function (req, res, next) {
 
       res.render("home", { user: req.session.user });
     } else {
-      res.redirect("/");
+      const errMsg = {
+        signUp: "",
+        signIn: "Erreur authentification",
+      };
+      res.render("sign", { title: "Ticketac", errMsg });
     }
   } catch (err) {
     res.send(err.messages);
@@ -112,7 +122,6 @@ router.get("/home", function (req, res, next) {
 router.post("/search-journey", async (req, res, next) => {
   try {
     let { departure, arrival, date } = req.body;
-    // Filtre de recherche à affiner
     if (departure && arrival && date) {
       departure = capitalizing(departure.toLowerCase());
       arrival = capitalizing(arrival.toLowerCase());
@@ -124,6 +133,19 @@ router.post("/search-journey", async (req, res, next) => {
       if (journeys.length) {
         res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
       } else {
+        res.redirect("/error");
+      }
+    } else if (departure && arrival && !date) {
+      departure = capitalizing(departure.toLowerCase());
+      arrival = capitalizing(arrival.toLowerCase());
+      const journeys = await journeyModel.find({
+        departure,
+        arrival,
+      });
+      if (journeys.length) {
+        res.render("shop", { title: "Ticketac", journeys });
+      } else {
+        //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
       }
     } else {
@@ -173,29 +195,31 @@ router.get("/confirm-cart", async function (req, res, next) {
     // user data comporte désormais les id des tickets
     req.session.temporaryCards = [];
     req.session.totalPrice = 0;
-    res.redirect('/my-trips');
-    
+    res.redirect("/my-trips");
   } catch (err) {
     res.send(err.messages);
   }
 });
 
-router.get('/my-trips', async function(req, res, next) {
-  var userJourneys = await userModel.findById(req.session.user.id).populate('journeys').exec();
-    
-    res.render("reservations", {
-      userJourneys
-    });
-})
+router.get("/my-trips", async function (req, res, next) {
+  var userJourneys = await userModel
+    .findById(req.session.user.id)
+    .populate("journeys")
+    .exec();
 
-router.get('/delete-cart', function(req, res, next) {
+  res.render("reservations", {
+    userJourneys,
+  });
+});
+
+router.get("/delete-cart", function (req, res, next) {
   req.session.temporaryCards.splice(req.query._id, 1);
   req.session.totalPrice = 0;
-  for (i=0; i<req.session.temporaryCards.length; i++) {
+  for (i = 0; i < req.session.temporaryCards.length; i++) {
     req.session.totalPrice += req.session.temporaryCards[i].price;
   }
-  
-  res.redirect('cart')
-})
+
+  res.redirect("cart");
+});
 
 module.exports = router;
