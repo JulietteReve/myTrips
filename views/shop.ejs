@@ -11,12 +11,13 @@
     <div class=container>
       <div class="row">
 
-        <h2 class="list-group col-8 mt-5 mx-auto text-white">Bonjour <%=user.firstname%>, voici les voyages disponibles </h2>
+        <h2 class="list-group col-8 mt-5 mx-auto text-white">Bonjour <%=user.firstname%>, voici les voyages disponibles : </h2>
 
         <ul class="list-group col-8 mt-5 mx-auto">
           <% for (var i=0; i<journeys.length; i++) { %>
-          <li class="list-group-item mb-2 d-flex justify-content-around align-items-center">
-            <h4><%= journeys[i].departure %> / <%= journeys[i].arrival %></h4>
+          <li class="list-group-item mb-2 d-flex justify-content-between">
+            <h5><%= journeys[i].departure %> / <%= journeys[i].arrival %></h5>
+            <span><%= dateFormat(journeys[i].date) %></span>
             <span>Départ : <%= journeys[i].departureTime %></span>
             <span><%= journeys[i].price %> €</span>
             <a href='/add-cart?_id=<%= journeys[i]._id %>'><button type="button" class="btn btn-danger">OK</button></a>
