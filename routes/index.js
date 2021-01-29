@@ -26,7 +26,11 @@ var totalPrice = 0;
 
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
-  res.render("sign", { title: "Ticketac" });
+  const errMsg = {
+    signUp: "",
+    signIn: "",
+  };
+  res.render("sign", { title: "Ticketac", errMsg });
 });
 
 // POST - Sign-Up
@@ -56,7 +60,11 @@ router.post("/signup", async function (req, res, next) {
       req.session.temporaryCards = [];
       res.render("home", { user: req.session.user });
     } else {
-      res.redirect("/");
+      const errMsg = {
+        signUp: "Email déjà utilisé",
+        signIn: "",
+      };
+      res.render("sign", { title: "Ticketac", errMsg });
     }
   } catch (err) {
     res.send(err.messages);
@@ -84,7 +92,11 @@ router.post("/signin", async function (req, res, next) {
 
       res.render("home", { user: req.session.user });
     } else {
-      res.redirect("/");
+      const errMsg = {
+        signUp: "",
+        signIn: "Erreur authentification",
+      };
+      res.render("sign", { title: "Ticketac", errMsg });
     }
   } catch (err) {
     res.send(err.messages);
@@ -110,7 +122,6 @@ router.get("/home", function (req, res, next) {
 router.post("/search-journey", async (req, res, next) => {
   try {
     let { departure, arrival, date } = req.body;
-    // Filtre de recherche à affiner
     if (departure && arrival && date) {
       departure = capitalizing(departure.toLowerCase());
       arrival = capitalizing(arrival.toLowerCase());
@@ -122,6 +133,19 @@ router.post("/search-journey", async (req, res, next) => {
       if (journeys.length) {
         res.render("shop", { title: "Ticketac", journeys });
       } else {
+        res.redirect("/error");
+      }
+    } else if (departure && arrival && !date) {
+      departure = capitalizing(departure.toLowerCase());
+      arrival = capitalizing(arrival.toLowerCase());
+      const journeys = await journeyModel.find({
+        departure,
+        arrival,
+      });
+      if (journeys.length) {
+        res.render("shop", { title: "Ticketac", journeys });
+      } else {
+        //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
       }
     } else {
@@ -175,6 +199,19 @@ router.get("/confirm-cart", async function (req, res, next) {
       temporaryCards: req.session.temporaryCards,
       totalPrice,
     });
+  } catch (err) {
+    res.send(err.messages);
+  }
+});
+
+// GET - MyLastTrips Page - Reservations
+router.get("/reservations", async (req, res, next) => {
+  try {
+    const lastTrips = await userModel
+      .find({ _id: req.session.user.id })
+      .populate("journeys")
+      .exec();
+    res.send(lastTrips);
   } catch (err) {
     res.send(err.messages);
   }
