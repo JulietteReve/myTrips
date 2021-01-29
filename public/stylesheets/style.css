@@ -2,6 +2,7 @@ body {
 margin: 0;
 padding: 0;
 height: 100vh;
+width: 100vw;
 box-sizing: border-box;
 background: linear-gradient(to bottom, rgba(197,222,234,1) 0%,rgba(138,187,215,1) 31%,rgba(6,109,171,1) 100%);
 background-repeat: no-repeat;
@@ -11,7 +12,6 @@ font-family: 'Work Sans', sans-serif;
 
 .navbar {
   font-family: 'Roboto', sans-serif;
-  align-content: space-between;
   justify-content: space-between;
 }
 
