@@ -20,11 +20,11 @@ const searchCities = async (searchText, matchInp) => {
     matches = [];
     matchInp.html("");
   }
-  passToHtml(matches, matchInp);
+  passMatchToHtml(matches, matchInp);
 };
 
 //Function to pass content to HTML
-const passToHtml = (matches, matchInp) => {
+const passMatchToHtml = (matches, matchInp) => {
   if (matches.length > 0) {
     const html = matches
       .map(
@@ -36,6 +36,25 @@ const passToHtml = (matches, matchInp) => {
   }
 };
 
+const passCityToHtml = (city, searchInp, element) => {
+  if (city.length > 0) {
+    searchInp.val(`${city}`);
+    element.html("");
+  }
+};
+
 //EventListeners to implement autocompletion
 departure.on("input", (e) => searchCities(e.target.value, matchD));
 arrival.on("input", (e) => searchCities(e.target.value, matchA));
+matchD.each(function () {
+  $(this).on("click", function () {
+    const city = $(this).children().children().text();
+    passCityToHtml(city, departure, $(this));
+  });
+});
+matchA.each(function () {
+  $(this).on("click", function () {
+    const city = $(this).children().children().text();
+    passCityToHtml(city, arrival, $(this));
+  });
+});
