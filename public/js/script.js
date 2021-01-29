@@ -9,7 +9,7 @@ arrival.attr("autocomplete", "off");
 
 //Function to search and filter your research and match with db
 const searchCities = async (searchText, matchContainer, searchInput) => {
-  const res = await fetch("http://localhost:3000/tickets/get-departures");
+  const res = await fetch("https://secure-river-94662.herokuapp.com/tickets/get-departures");
   const cities = await res.json();
   let matches = cities.filter((city) => {
     const regex = new RegExp(`^${searchText}`, "gi");
