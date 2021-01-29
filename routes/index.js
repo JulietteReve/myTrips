@@ -206,7 +206,7 @@ router.get("/my-trips", async function (req, res, next) {
 
   res.render("reservations", {
     userJourneys,
-    user: req.session.user
+    user: req.session.user,
   });
 });
 
