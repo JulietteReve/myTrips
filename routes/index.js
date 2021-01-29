@@ -108,6 +108,7 @@ router.get("/home", function (req, res, next) {
 router.post("/search-journey", async (req, res, next) => {
   try {
     let { departure, arrival, date } = req.body;
+    //Tous les champs remplis
     if (departure && arrival && date) {
       departure = capitalizing(departure.toLowerCase());
       arrival = capitalizing(arrival.toLowerCase());
@@ -126,12 +127,15 @@ router.post("/search-journey", async (req, res, next) => {
         res.redirect("/error");
       }
     } else if (departure && arrival && !date) {
+      //Uniquement les champs de départ et destination (flexibilité date)
       departure = capitalizing(departure.toLowerCase());
       arrival = capitalizing(arrival.toLowerCase());
-      const journeys = await journeyModel.find({
-        departure,
-        arrival,
-      });
+      const journeys = await journeyModel
+        .find({
+          departure,
+          arrival,
+        })
+        .sort({ date: 1 });
       if (journeys.length) {
         res.render("shop", {
           title: "Ticketac",
@@ -245,8 +249,6 @@ router.get("/confirm-cart", async function (req, res, next) {
         user.journeys.push(req.session.temporaryCards[i]._id);
         await user.save();
       }
-      // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
-      // user data comporte désormais les id des tickets
       req.session.temporaryCards = [];
       req.session.totalPrice = 0;
       res.redirect("/my-trips");
