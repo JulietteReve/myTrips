@@ -17,7 +17,7 @@
           <% for (var i=0; i<journeys.length; i++) { %>
           <li class="list-group-item mb-2 d-flex justify-content-around align-items-center">
             <h4><%= journeys[i].departure %> / <%= journeys[i].arrival %></h4>
-            <span>train departure at: <%= journeys[i].departureTime %></span>
+            <span>Départ : <%= journeys[i].departureTime %></span>
             <span><%= journeys[i].price %> €</span>
             <a href='/add-cart?_id=<%= journeys[i]._id %>'><button type="button" class="btn btn-danger">OK</button></a>
             

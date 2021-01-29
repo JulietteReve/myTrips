@@ -111,7 +111,7 @@ router.post("/search-journey", async (req, res, next) => {
         departure,
         arrival,
         date,
-      });      
+      });
       if (journeys.length) {
         res.render("shop", {
           title: "Ticketac",
@@ -129,7 +129,11 @@ router.post("/search-journey", async (req, res, next) => {
         arrival,
       });
       if (journeys.length) {
-        res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
+        res.render("shop", {
+          title: "Ticketac",
+          journeys,
+          user: req.session.user,
+        });
       } else {
         //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
@@ -159,15 +163,70 @@ router.get("/cart", function (req, res, next) {
 // GET - Add Ticket To Cart
 router.get("/add-cart", async function (req, res, next) {
   var cart = await journeyModel.findById(req.query._id);
-  req.session.temporaryCards.push(cart);
+  alreadyExist = false;
 
-  req.session.totalPrice += cart.price;
+  for (i = 0; i < req.session.temporaryCards.length; i++) {
+    if (req.query._id === req.session.temporaryCards[i]._id) {
+      alreadyExist = true;
+    }
+  }
+
+  if (alreadyExist === false) {
+    req.session.temporaryCards.push(cart);
+    req.session.totalPrice += cart.price;
+  }
 
   res.render("cart", {
-    user: req.session.user,
     temporaryCards: req.session.temporaryCards,
     totalPrice: req.session.totalPrice,
+    user: req.session.user,
   });
+});
+
+// GET - Return To The Shop
+router.get("/backtoshop", async function (req, res, next) {
+  try {
+    let { departure, arrival, date } = req.body;
+    if (departure && arrival && date) {
+      departure = capitalizing(departure.toLowerCase());
+      arrival = capitalizing(arrival.toLowerCase());
+      const journeys = await journeyModel.find({
+        departure,
+        arrival,
+        date,
+      });
+      if (journeys.length) {
+        res.render("shop", {
+          title: "Ticketac",
+          journeys,
+          user: req.session.user,
+        });
+      } else {
+        res.redirect("/error");
+      }
+    } else if (departure && arrival && !date) {
+      departure = capitalizing(departure.toLowerCase());
+      arrival = capitalizing(arrival.toLowerCase());
+      const journeys = await journeyModel.find({
+        departure,
+        arrival,
+      });
+      if (journeys.length) {
+        res.render("shop", {
+          title: "Ticketac",
+          journeys,
+          user: req.session.user,
+        });
+      } else {
+        //pourra être supprimé après ajout de l'auto-complétion
+        res.redirect("/error");
+      }
+    } else {
+      res.redirect("/home");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
 });
 
 // GET - Confirm Ticket "Purchase" - Add to user's db
