@@ -10,21 +10,21 @@
     <div class=container>
       <div class="row">
 
-        <h2 class="list-group col-8 mt-5 mx-auto text-white">My journeys</h2>
+        <h2 class="list-group col-8 mt-5 mx-auto text-white"><%=user.firstname%>, voici vos trajets à venir</h2>
 
         <table class="table table-light mt-3">
           <thead>
             <tr>
               <th scope="col">Date</th>
-              <th scope="col">Journey</th>
-              <th scope="col">Departure time</th>
-              <th scope="col">Price</th>
+              <th scope="col">Voyage</th>
+              <th scope="col">Heure de départ</th>
+              <th scope="col">Prix</th>
             </tr>
           </thead>
           <tbody>
             <% for (i=0; i<userJourneys.journeys.length; i++) { %>
             <tr>
-              <th scope="row"><%= userJourneys.journeys[i].date.toLocaleDateString() %></th>
+              <th scope="row"><%= dateFormat(userJourneys.journeys[i].date.toLocaleDateString()) %></th>
               <td><%= userJourneys.journeys[i].departure %> / <%= userJourneys.journeys[i].arrival %></td>
               <td><%= userJourneys.journeys[i].departureTime %></td>
               <td><%= userJourneys.journeys[i].price %> €</td>
