@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Work+Sans:wght@500&display=swap" rel="stylesheet">
-    
+
   </head>
   <body>
 
@@ -15,28 +15,28 @@
 
     <div class="container mt-4">
       <div class="row">
-        <h3 class='text-light'>One-way ticket :</h3>
+        <h3 class='text-light'>Bonjour <%=user.firstname%>, quel sera votre prochain voyage ?</h3>
       </div>
       <div class="row justify-content-around mt-3">
         <form action="/search-journey" method="POST">
           <div class="form-row justify-content-center">
             <div class="col">
-              <input type="text" class="form-control" placeholder="From: Paris, Marseille..." name="departure">
+              <input type="text" class="form-control" placeholder="Départ" name="departure">
             </div>
             <div class="col">
-              <input type="text" class="form-control" placeholder="To: Lille, Nantes..." name="arrival">
+              <input type="text" class="form-control" placeholder="Arrivée" name="arrival">
             </div>
             <div class="col">
               <input type="date" class="form-control" min="2018-11-01" max="2018-12-31" name="date">
             </div>
             <div class="col">
-              <button class="btn btn-danger">Go</button>
+              <button class="btn btn-danger">C'est parti !</button>
             </div>
           </div>
         </form>
       </div>
 
-      <p>Hello <%=user.firstname%></p>
+      
       <div class="row justify-content-center mt-5">
           <img src="./images/landmark.png" alt="train-ticketac">
       </div>
