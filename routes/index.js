@@ -139,7 +139,6 @@ router.post("/search-journey", async (req, res, next) => {
           user: req.session.user,
         });
       } else {
-        //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
       }
     } else {
@@ -157,11 +156,15 @@ router.get("/error", (req, res, next) => {
 
 // GET - Cart Page
 router.get("/cart", function (req, res, next) {
-  res.render("cart", {
-    user: req.session.user,
-    temporaryCards: req.session.temporaryCards,
-    totalPrice: req.session.totalPrice,
-  });
+  if (req.session.user) {
+    res.render("cart", {
+      user: req.session.user,
+      temporaryCards: req.session.temporaryCards,
+      totalPrice: req.session.totalPrice,
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 // GET - Add Ticket To Cart
@@ -236,41 +239,57 @@ router.get("/backtoshop", async function (req, res, next) {
 // GET - Confirm Ticket "Purchase" - Add to user's db
 router.get("/confirm-cart", async function (req, res, next) {
   try {
-    var user = await userModel.findById(req.session.user.id);
-    for (let i = 0; i < req.session.temporaryCards.length; i++) {
-      user.journeys.push(req.session.temporaryCards[i]._id);
-      await user.save();
+    if (req.session.user) {
+      var user = await userModel.findById(req.session.user.id);
+      for (let i = 0; i < req.session.temporaryCards.length; i++) {
+        user.journeys.push(req.session.temporaryCards[i]._id);
+        await user.save();
+      }
+      // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
+      // user data comporte désormais les id des tickets
+      req.session.temporaryCards = [];
+      req.session.totalPrice = 0;
+      res.redirect("/my-trips");
+    } else {
+      res.redirect("/");
     }
-    // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
-    // user data comporte désormais les id des tickets
-    req.session.temporaryCards = [];
-    req.session.totalPrice = 0;
-    res.redirect("/my-trips");
   } catch (err) {
     res.send(err.messages);
   }
 });
 
 router.get("/my-trips", async function (req, res, next) {
-  var userJourneys = await userModel
-    .findById(req.session.user.id)
-    .populate("journeys")
-    .exec();
+  try {
+    if (req.session.user) {
+      var userJourneys = await userModel
+        .findById(req.session.user.id)
+        .populate("journeys")
+        .exec();
 
-  res.render("reservations", {
-    userJourneys,
-    user: req.session.user,
-  });
+      res.render("reservations", {
+        userJourneys,
+        user: req.session.user,
+      });
+    } else {
+      res.redirect("/");
+    }
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 router.get("/delete-cart", function (req, res, next) {
-  req.session.temporaryCards.splice(req.query._id, 1);
-  req.session.totalPrice = 0;
-  for (i = 0; i < req.session.temporaryCards.length; i++) {
-    req.session.totalPrice += req.session.temporaryCards[i].price;
-  }
+  if (req.session.user) {
+    req.session.temporaryCards.splice(req.query._id, 1);
+    req.session.totalPrice = 0;
+    for (i = 0; i < req.session.temporaryCards.length; i++) {
+      req.session.totalPrice += req.session.temporaryCards[i].price;
+    }
 
-  res.redirect("cart");
+    res.redirect("cart");
+  } else {
+    res.redirect("/");
+  }
 });
 
 module.exports = router;
