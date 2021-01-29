@@ -22,8 +22,6 @@ var date = [
   "2018-11-24",
 ];
 
-var totalPrice = 0;
-
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
   const errMsg = {
@@ -58,6 +56,7 @@ router.post("/signup", async function (req, res, next) {
         id: newUser._id,
       };
       req.session.temporaryCards = [];
+      req.session.totalPrice = 0;
       res.render("home", { user: req.session.user });
     } else {
       const errMsg = {
@@ -89,6 +88,7 @@ router.post("/signin", async function (req, res, next) {
       };
 
       req.session.temporaryCards = [];
+      req.session.totalPrice = 0;
 
       res.render("home", { user: req.session.user });
     } else {
@@ -166,7 +166,7 @@ router.get("/cart", function (req, res, next) {
   res.render("cart", {
     user: req.session.user,
     temporaryCards: req.session.temporaryCards,
-    totalPrice,
+    totalPrice: req.session.totalPrice,
   });
 });
 
@@ -175,13 +175,11 @@ router.get("/add-cart", async function (req, res, next) {
   var cart = await journeyModel.findById(req.query._id);
   req.session.temporaryCards.push(cart);
 
-  for (i = 0; i < req.session.temporaryCards.length; i++) {
-    totalPrice += req.session.temporaryCards[i].price;
-  }
+  req.session.totalPrice += cart.price;
 
   res.render("cart", {
     temporaryCards: req.session.temporaryCards,
-    totalPrice,
+    totalPrice: req.session.totalPrice,
   });
 });
 
@@ -195,26 +193,33 @@ router.get("/confirm-cart", async function (req, res, next) {
     }
     // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
     // user data comporte désormais les id des tickets
-    res.render("reservations", {
-      temporaryCards: req.session.temporaryCards,
-      totalPrice,
-    });
+    req.session.temporaryCards = [];
+    req.session.totalPrice = 0;
+    res.redirect("/my-trips");
   } catch (err) {
     res.send(err.messages);
   }
 });
 
-// GET - MyLastTrips Page - Reservations
-router.get("/reservations", async (req, res, next) => {
-  try {
-    const lastTrips = await userModel
-      .find({ _id: req.session.user.id })
-      .populate("journeys")
-      .exec();
-    res.send(lastTrips);
-  } catch (err) {
-    res.send(err.messages);
+router.get("/my-trips", async function (req, res, next) {
+  var userJourneys = await userModel
+    .findById(req.session.user.id)
+    .populate("journeys")
+    .exec();
+
+  res.render("reservations", {
+    userJourneys,
+  });
+});
+
+router.get("/delete-cart", function (req, res, next) {
+  req.session.temporaryCards.splice(req.query._id, 1);
+  req.session.totalPrice = 0;
+  for (i = 0; i < req.session.temporaryCards.length; i++) {
+    req.session.totalPrice += req.session.temporaryCards[i].price;
   }
+
+  res.redirect("cart");
 });
 
 module.exports = router;
