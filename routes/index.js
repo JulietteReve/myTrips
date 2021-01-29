@@ -122,7 +122,7 @@ router.post("/search-journey", async (req, res, next) => {
         date,
       });
       if (journeys.length) {
-        res.render("shop", { title: "Ticketac", journeys });
+        res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
       } else {
         res.redirect("/error");
       }
