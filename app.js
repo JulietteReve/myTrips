@@ -28,9 +28,14 @@ app.use(
   })
 );
 
-app.locals.dateFormat = function(date){
+app.locals.dateFormat = function (date) {
   var newDate = new Date(date);
-  var format = newDate.getDate()+'/'+(newDate.getMonth()+1)+'/'+newDate.getFullYear();
+  var format =
+    newDate.getDate() +
+    "/" +
+    (newDate.getMonth() + 1) +
+    "/" +
+    newDate.getFullYear();
   return format;
 };
 
@@ -41,7 +46,7 @@ app.use("/tickets", ticketsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  res.status(404).render("404", { title: "Ticketac" });
 });
 
 // error handler
