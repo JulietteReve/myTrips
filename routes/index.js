@@ -25,6 +25,7 @@ var date = [
 
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
+  
   res.render("sign", { title: "Ticketac" });
 });
 
@@ -154,7 +155,6 @@ router.get("/add-cart", async function (req, res, next) {
 
   req.session.totalPrice += cart.price;
 
-  console.log(req.session.temporaryCards)
   res.render("cart", {
     temporaryCards: req.session.temporaryCards,
     totalPrice: req.session.totalPrice,
@@ -171,12 +171,20 @@ router.get("/confirm-cart", async function (req, res, next) {
     }
     // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
     // user data comporte désormais les id des tickets
-    res.render("reservations", {
-      temporaryCards: req.session.temporaryCards,
-    });
+
+    res.redirect('/my-trips');
+    
   } catch (err) {
     res.send(err.messages);
   }
 });
+
+router.get('/my-trips', async function(req, res, next) {
+  var userJourneys = await userModel.findById(req.session.user.id).populate('journeys').exec();
+    
+    res.render("reservations", {
+      userJourneys
+    });
+})
 
 module.exports = router;
