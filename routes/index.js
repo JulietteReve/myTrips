@@ -170,6 +170,48 @@ router.get("/add-cart", async function (req, res, next) {
   });
 });
 
+// GET - Return To The Shop
+router.get("/backtoshop", async function (req, res, next) {
+  try {
+    let { departure, arrival, date } = req.body;
+    if (departure && arrival && date) {
+      departure = capitalizing(departure.toLowerCase());
+      arrival = capitalizing(arrival.toLowerCase());
+      const journeys = await journeyModel.find({
+        departure,
+        arrival,
+        date,
+      });      
+      if (journeys.length) {
+        res.render("shop", {
+          title: "Ticketac",
+          journeys,
+          user: req.session.user,
+        });
+      } else {
+        res.redirect("/error");
+      }
+    } else if (departure && arrival && !date) {
+      departure = capitalizing(departure.toLowerCase());
+      arrival = capitalizing(arrival.toLowerCase());
+      const journeys = await journeyModel.find({
+        departure,
+        arrival,
+      });
+      if (journeys.length) {
+        res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
+      } else {
+        //pourra être supprimé après ajout de l'auto-complétion
+        res.redirect("/error");
+      }
+    } else {
+      res.redirect("/home");
+    }
+  } catch (err) {
+    res.send(err.messages);
+  }
+});
+
 // GET - Confirm Ticket "Purchase" - Add to user's db
 router.get("/confirm-cart", async function (req, res, next) {
   try {
