@@ -171,7 +171,8 @@ router.get("/confirm-cart", async function (req, res, next) {
     }
     // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
     // user data comporte désormais les id des tickets
-
+    req.session.temporaryCards = [];
+    req.session.totalPrice = 0;
     res.redirect('/my-trips');
     
   } catch (err) {
