@@ -3,6 +3,7 @@
   <head>
     <title>Cart</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/a41e9403cf.js" crossorigin="anonymous"></script>
     <link rel='stylesheet' href='./stylesheets/style.css' />
   </head>
   <body>
@@ -32,6 +33,7 @@
                 <td><%= temporaryCards[i].date %></td>
                 <td><%= temporaryCards[i].departureTime %></td>
                 <td><%= temporaryCards[i].price %></td>
+                <td><a href="/delete-cart?_id=<%= temporaryCards[i]._id %>"><i class="far fa-trash-alt"></i></a></td>
               </tr>
               <% } %>
               <tr class="list-group-item-danger">
@@ -40,6 +42,7 @@
                 <td></td>
                 <td></td>
                 <td><%= totalPrice %> €</td>
+                <td></td>
               </tr>
             </tbody>
           </table>

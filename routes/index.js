@@ -171,7 +171,8 @@ router.get("/confirm-cart", async function (req, res, next) {
     }
     // RENDER A MODIFIER : temporaryCards à vider, data de l'utilisateur à envoyer
     // user data comporte désormais les id des tickets
-
+    req.session.temporaryCards = [];
+    req.session.totalPrice = 0;
     res.redirect('/my-trips');
     
   } catch (err) {
@@ -185,6 +186,16 @@ router.get('/my-trips', async function(req, res, next) {
     res.render("reservations", {
       userJourneys
     });
+})
+
+router.get('/delete-cart', function(req, res, next) {
+  req.session.temporaryCards.splice(req.query._id, 1);
+  req.session.totalPrice = 0;
+  for (i=0; i<req.session.temporaryCards.length; i++) {
+    req.session.totalPrice += req.session.temporaryCards[i].price;
+  }
+  
+  res.redirect('cart')
 })
 
 module.exports = router;
