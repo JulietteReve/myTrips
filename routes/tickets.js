@@ -3,14 +3,14 @@ var router = express.Router();
 const journeyModel = require("../models/journey");
 
 /* GET tickets listing. */
-router.get("/", async (req, res, next) => {
-  try {
-    const journeys = await journeyModel.find();
-    res.send(journeys);
-  } catch (err) {
-    res.send(err.messages);
-  }
-});
+// router.get("/", async (req, res, next) => {
+//   try {
+//     const journeys = await journeyModel.find();
+//     res.send(journeys);
+//   } catch (err) {
+//     res.send(err.messages);
+//   }
+// });
 
 //GET - Récupérer toutes les villes de départ côté Front -> autocomplétion
 router.get("/get-departures", async (req, res, next) => {

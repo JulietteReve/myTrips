@@ -173,25 +173,30 @@ router.get("/cart", function (req, res, next) {
 
 // GET - Add Ticket To Cart
 router.get("/add-cart", async function (req, res, next) {
-  var cart = await journeyModel.findById(req.query._id);
-  alreadyExist = false;
+  try {
+    var cart = await journeyModel.findById(req.query._id);
+    alreadyExist = false;
 
-  for (i = 0; i < req.session.temporaryCards.length; i++) {
-    if (req.query._id === req.session.temporaryCards[i]._id) {
-      alreadyExist = true;
+    for (i = 0; i < req.session.temporaryCards.length; i++) {
+      if (req.query._id === req.session.temporaryCards[i]._id) {
+        alreadyExist = true;
+      }
     }
-  }
 
-  if (alreadyExist === false) {
-    req.session.temporaryCards.push(cart);
-    req.session.totalPrice += cart.price;
-  }
+    if (alreadyExist === false) {
+      req.session.temporaryCards.push(cart);
+      req.session.totalPrice += cart.price;
+    }
 
-  res.render("cart", {
-    temporaryCards: req.session.temporaryCards,
-    totalPrice: req.session.totalPrice,
-    user: req.session.user,
-  });
+    res.render("cart", {
+      temporaryCards: req.session.temporaryCards,
+      totalPrice: req.session.totalPrice,
+      user: req.session.user,
+    });
+  } catch (err) {
+    console.log(err);
+    res.redirect("/home");
+  }
 });
 
 // GET - Return To The Shop
