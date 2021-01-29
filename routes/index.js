@@ -209,7 +209,9 @@ router.get("/backtoshop", async function (req, res, next) {
         arrival,
       });
       if (journeys.length) {
-        res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
+        res.render("shop", { title: "Ticketac", 
+        journeys, 
+        user: req.session.user, });
       } else {
         //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
