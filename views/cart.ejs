@@ -16,15 +16,15 @@
            <h2 class="list-group col-8 mt-5 mx-auto text-white"><%= user.firstname%>, votre panier est vide <i class="fas fa-sad-tear"></i></h2> 
         <% } else { %>
         <div class="row">
-          <h2 class="list-group col-8 mt-5 mx-auto text-white">My Tickets</h2>
+          <h2 class="list-group col-8 mt-5 mx-auto text-white"><%= user.firstname%>, voici les trajets que vous avez sélectionnés</h2>
           <table class="table table-light mt-3">
             <thead>
               <tr>
                 <th scope="col">N°</th>
-                <th scope="col">Journey</th>
+                <th scope="col">Trajet</th>
                 <th scope="col">Date</th>
-                <th scope="col">Departure time</th>
-                <th scope="col">Price</th>
+                <th scope="col">Heure de départ</th>
+                <th scope="col">Prix</th>
               </tr>
             </thead>
             <tbody>
@@ -32,9 +32,9 @@
               <tr>
                 <th scope="row"><%= i +1 %></th>
                 <td><%= temporaryCards[i].departure %> / <%= temporaryCards[i].arrival %></td>
-                <td><%= temporaryCards[i].date %></td>
+                <td><%= dateFormat(temporaryCards[i].date) %></td>
                 <td><%= temporaryCards[i].departureTime %></td>
-                <td><%= temporaryCards[i].price %></td>
+                <td><%= temporaryCards[i].price %> €</td>
                 <td><a href="/delete-cart?_id=<%= temporaryCards[i]._id %>"><i class="far fa-trash-alt"></i></a></td>
               </tr>
               <% } %>
@@ -50,7 +50,7 @@
           </table> 
         </div>
         <div class="row d-flex justify-content-end">
-          <a href="/confirm-cart"><button type="button" class="btn btn-danger">Confirm</button></a>
+          <a href="/confirm-cart"><button type="button" class="btn btn-danger">Valider</button></a>
         </div>  
         <% } %>
      
