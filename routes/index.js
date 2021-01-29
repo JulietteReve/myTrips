@@ -111,7 +111,7 @@ router.post("/search-journey", async (req, res, next) => {
         departure,
         arrival,
         date,
-      });
+      });      
       if (journeys.length) {
         res.render("shop", {
           title: "Ticketac",
@@ -129,7 +129,7 @@ router.post("/search-journey", async (req, res, next) => {
         arrival,
       });
       if (journeys.length) {
-        res.render("shop", { title: "Ticketac", journeys });
+        res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
       } else {
         //pourra être supprimé après ajout de l'auto-complétion
         res.redirect("/error");
@@ -164,6 +164,7 @@ router.get("/add-cart", async function (req, res, next) {
   req.session.totalPrice += cart.price;
 
   res.render("cart", {
+    user: req.session.user,
     temporaryCards: req.session.temporaryCards,
     totalPrice: req.session.totalPrice,
   });
@@ -195,6 +196,7 @@ router.get("/my-trips", async function (req, res, next) {
 
   res.render("reservations", {
     userJourneys,
+    user: req.session.user,
   });
 });
 
