@@ -22,7 +22,6 @@ var date = [
   "2018-11-24",
 ];
 
-var totalPrice = 0;
 
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
@@ -54,6 +53,7 @@ router.post("/signup", async function (req, res, next) {
         id: newUser._id,
       };
       req.session.temporaryCards = [];
+      req.session.totalPrice = 0;
       res.render("home", { user: req.session.user });
     } else {
       res.redirect("/");
@@ -81,6 +81,7 @@ router.post("/signin", async function (req, res, next) {
       };
 
       req.session.temporaryCards = [];
+      req.session.totalPrice = 0;
 
       res.render("home", { user: req.session.user });
     } else {
@@ -142,7 +143,7 @@ router.get("/cart", function (req, res, next) {
   res.render("cart", {
     user: req.session.user,
     temporaryCards: req.session.temporaryCards,
-    totalPrice,
+    totalPrice: req.session.totalPrice,
   });
 });
 
@@ -151,13 +152,12 @@ router.get("/add-cart", async function (req, res, next) {
   var cart = await journeyModel.findById(req.query._id);
   req.session.temporaryCards.push(cart);
 
-  for (i = 0; i < req.session.temporaryCards.length; i++) {
-    totalPrice += req.session.temporaryCards[i].price;
-  }
+  req.session.totalPrice += cart.price;
 
+  console.log(req.session.temporaryCards)
   res.render("cart", {
     temporaryCards: req.session.temporaryCards,
-    totalPrice,
+    totalPrice: req.session.totalPrice,
   });
 });
 
@@ -173,7 +173,6 @@ router.get("/confirm-cart", async function (req, res, next) {
     // user data comporte désormais les id des tickets
     res.render("reservations", {
       temporaryCards: req.session.temporaryCards,
-      totalPrice,
     });
   } catch (err) {
     res.send(err.messages);
