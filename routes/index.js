@@ -10,7 +10,11 @@ router.get("/", function (req, res, next) {
     signUp: "",
     signIn: "",
   };
-  res.render("sign", { title: "Ticketac", errMsg });
+  if (req.session.user) {
+    res.redirect("/home");
+  } else {
+    res.render("sign", { title: "Ticketac", errMsg });
+  }
 });
 
 // POST - Sign-Up
