@@ -15,60 +15,58 @@
 
     <div class= container>
     
-    <div class="row">
+      <div class="row">
 
-
-      <!-- SIGN IN AREA -->
-      <div class="col-6 col-sm-3 offset-3 text-center mt-5">
-
-        <div class="formArea">
-
-          <h4 class="titleForm">Connexion</h4>
-
-          <form action="/signin" method="POST">
-            <div class="form-group">
-              <input name="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Email">
-            </div>
-            <div class="form-group">
-              <input name="password" type="password" class="form-control" placeholder="Mot de passe">
-            </div>
-
-            <button type="submit" class="btn btn-danger">Ça roule !</button>
-          </form>
-
+        <!-- SIGN IN AREA -->
+        <div class="col-6 col-sm-3 offset-3 text-center mt-5">
+          <div class="formArea">
+            <h4 class="titleForm">Connexion</h4>
+            <form action="/signin" method="POST">
+              <div class="form-group">
+                <input name="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <input name="password" type="password" class="form-control" placeholder="Mot de passe">
+              </div>
+              <button type="submit" class="btn btn-danger">Ça roule !</button>
+            </form>
+          </div>
         </div>
 
-      </div>
-
-      <!-- SIGN UP AREA -->
-      <div class="col-6 col-sm-3 text-center mt-5">
-
-        <div class="formArea">
-          <h4 class="titleForm">Inscription</h4>
-
-          <form action="/signup" method="POST">
-            <div class="form-group">
-              <input name="lastname" type="text" class="form-control" placeholder="Nom">
-            </div>
-            <div class="form-group">
-              <input name="firstname" type="text" class="form-control" placeholder="Prénom">
-            </div>
-            <div class="form-group">
-              <input name="email" type="email" class="form-control" aria-describedby="email" placeholder="Email">
-            </div>
-            <div class="form-group">
-              <input name="password" type="password" class="form-control"  placeholder="Mot de passe">
-            </div>
-
-            <button type="submit" class="btn btn-danger">Je m'inscris !</button>
-          </form>
+        <!-- SIGN UP AREA -->
+        <div class="col-6 col-sm-3 text-center mt-5">
+          <div class="formArea">
+            <h4 class="titleForm">Inscription</h4>
+            <form action="/signup" method="POST">
+              <div class="form-group">
+                <input name="lastname" type="text" class="form-control" placeholder="Nom">
+              </div>
+              <div class="form-group">
+                <input name="firstname" type="text" class="form-control" placeholder="Prénom">
+              </div>
+              <div class="form-group">
+                <input name="email" type="email" class="form-control" aria-describedby="email" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <input name="password" type="password" class="form-control"  placeholder="Mot de passe">
+              </div>
+              <button type="submit" class="btn btn-danger">Je m'inscris !</button>
+            </form>
+          </div>
         </div>
 
-      </div>
+      <!-- ERROR MESSAGES AREA -->
+      <% if (errMsg.signIn.length || errMsg.signUp.length) { %>
+        <div class="row mt-4">
+          <div class="alert alert-danger w-100 mt-3" role="alert">
+            <% if (errMsg.signIn.length) { %>
+              <%= errMsg.signIn %>
+            <%} else { %>
+              <%= errMsg.signUp %>
+            <% } %>
+      <% } %>
 
     </div>
-
-  </div>
 
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

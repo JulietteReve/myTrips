@@ -4,6 +4,7 @@
     <title>home</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel='stylesheet' href='./stylesheets/style.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Work+Sans:wght@500&display=swap" rel="stylesheet">
@@ -21,10 +22,12 @@
         <form action="/search-journey" method="POST">
           <div class="form-row justify-content-center">
             <div class="col">
-              <input type="text" class="form-control" placeholder="Départ" name="departure">
+              <input type="text" class="form-control" id='departure' placeholder="Départ" name="departure">
+              <div id="match-departure"></div>
             </div>
             <div class="col">
-              <input type="text" class="form-control" placeholder="Arrivée" name="arrival">
+              <input type="text" class="form-control" id='arrival' placeholder="Arrivée" name="arrival">
+              <div id="match-arrival"></div>
             </div>
             <div class="col">
               <input type="date" class="form-control" min="2018-11-01" max="2018-12-31" name="date">
@@ -37,11 +40,13 @@
       </div>
 
       
-      <div class="row justify-content-center mt-5">
-          <img src="./images/landmark.png" alt="train-ticketac">
-      </div>
+      
     </div>
-
+    
+    <div class="row justify-content-center mt-5">
+          <img  src="./images/landmark.png" alt="train-ticketac">
+    </div>
+    <script src="./js/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
