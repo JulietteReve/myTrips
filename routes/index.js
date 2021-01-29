@@ -120,7 +120,7 @@ router.post("/search-journey", async (req, res, next) => {
         departure,
         arrival,
         date,
-      });
+      });      
       if (journeys.length) {
         res.render("shop", { title: "Ticketac", journeys });
       } else {
