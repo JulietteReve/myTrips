@@ -4,24 +4,6 @@ var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
 var { capitalizing } = require("../helper");
 
-var city = [
-  "Paris",
-  "Marseille",
-  "Nantes",
-  "Lyon",
-  "Rennes",
-  "Melun",
-  "Bordeaux",
-  "Lille",
-];
-var date = [
-  "2018-11-20",
-  "2018-11-21",
-  "2018-11-22",
-  "2018-11-23",
-  "2018-11-24",
-];
-
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
   const errMsg = {
@@ -131,7 +113,11 @@ router.post("/search-journey", async (req, res, next) => {
         date,
       });      
       if (journeys.length) {
-        res.render("shop", { title: "Ticketac", journeys, user: req.session.user });
+        res.render("shop", {
+          title: "Ticketac",
+          journeys,
+          user: req.session.user,
+        });
       } else {
         res.redirect("/error");
       }
