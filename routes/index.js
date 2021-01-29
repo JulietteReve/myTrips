@@ -3,6 +3,7 @@ var router = express.Router();
 var journeyModel = require("../models/journey");
 var userModel = require("../models/user");
 var { capitalizing } = require("../helper");
+const session = require("express-session");
 
 // GET - Sign-In/Sign-Up Page.
 router.get("/", function (req, res, next) {
@@ -111,7 +112,7 @@ router.post("/search-journey", async (req, res, next) => {
         departure,
         arrival,
         date,
-      });      
+      });
       if (journeys.length) {
         res.render("shop", {
           title: "Ticketac",
@@ -159,14 +160,23 @@ router.get("/cart", function (req, res, next) {
 // GET - Add Ticket To Cart
 router.get("/add-cart", async function (req, res, next) {
   var cart = await journeyModel.findById(req.query._id);
-  req.session.temporaryCards.push(cart);
+  alreadyExist = false;
+  
+  for (i=0; i<req.session.temporaryCards.length; i++) {
+    if (req.query._id === req.session.temporaryCards[i]._id) {
+      alreadyExist = true
+    }
+  }
 
-  req.session.totalPrice += cart.price;
+  if (alreadyExist === false) {
+    req.session.temporaryCards.push(cart);
+    req.session.totalPrice += cart.price;
+  }
 
   res.render("cart", {
-    user: req.session.user,
     temporaryCards: req.session.temporaryCards,
     totalPrice: req.session.totalPrice,
+    user: req.session.user
   });
 });
 

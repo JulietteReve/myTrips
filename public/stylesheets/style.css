@@ -35,3 +35,8 @@ a {
 img {
   width: 30%;
 }
+
+#match-departure div:hover, #match-arrival div:hover{
+  background-color: rgb(10, 10, 240);
+  color: white
+}
